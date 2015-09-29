@@ -102,7 +102,7 @@ file {
     mode    => '0755',
     require => Exec['install_awscli'];
   '/usr/local/bin/set_eip.sh':
-    content => template('it_emailprocessor/templates/set_eip.sh.erb'),
+    content => template('it_emailprocessor/set_eip.sh.erb'),
     mode    => '0755',
     require => Exec['install_awscli'];
 }
