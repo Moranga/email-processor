@@ -52,13 +52,12 @@ supervisord::program { 'emailprocessor':
   user            => $app_runas,
 }
 
-# supervisord::supervisorctl { 'restart_myapp':
-#  command     => 'restart',
-#  process     => 'emailprocessor'
-#  refreshonly => true,
-#  subscribe   => Exec['emailprocessor-install'],
-#}
-
+supervisord::supervisorctl { 'restart_emailprocessor':
+ command     => 'restart',
+ process     => 'emailprocessor',
+ refreshonly => true,
+ subscribe   => Exec['emailprocessor-install'],
+}
 
 supervisord::program { 'emailprocessor-save_attachments':
   command         => '/usr/local/bin/emailprocessor save_attachments',
