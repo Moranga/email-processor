@@ -12,7 +12,10 @@ env_vars = [
     'EMAILPROCESSOR_BING_TO_S3_BUCKET',
     'EMAILPROCESSOR_USERNAME',
     'EMAILPROCESSOR_PORT',
-    'EMAILPROCESSOR_ADDRESS'
+    'EMAILPROCESSOR_ADDRESS',
+    'AWS_ACCESS_KEY_ID',
+    'AWS_SECRET_ACCESS_KEY',
+    'AWS_DEFAULT_REGION'
 ]
 
 
@@ -84,11 +87,15 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get install -y apache2
   # SHELL
 
+
+
+  config.vm.network "forwarded_port", guest: ENV['EMAILPROCESSOR_PORT'], host: ENV['EMAILPROCESSOR_PORT']
+
   # Transfer env variables to the box
   env_vars.each do |varname|
       config.vm.provision varname, type: "shell" do |s|
-          s.inline = "echo 'export %s=%s' >> /etc/app-env.sh" %
-              [varname, ENV[varname]]
+          s.inline = "grep -isq %s /etc/app-env.sh || echo 'export %s=%s' >> /etc/app-env.sh" %
+              [varname, varname, ENV[varname]]
       end
   end
 

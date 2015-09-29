@@ -7,3 +7,9 @@
 [submodule "vagrant-assesment/puppet/modules/stdlib"]
 	path = vagrant-assesment/puppet/modules/stdlib
 	url = https://github.com/puppetlabs/puppetlabs-stdlib.git
+[submodule "vagrant-assesment/puppet/modules/concat"]
+	path = vagrant-assesment/puppet/modules/concat
+	url = https://github.com/puppetlabs/puppetlabs-concat.git
+[submodule "vagrant-assesment/vagrant-assesment/puppet/modules/supervisord"]
+	path = vagrant-assesment/vagrant-assesment/puppet/modules/supervisord
+	url = https://github.com/ajcrowe/puppet-supervisord.git
