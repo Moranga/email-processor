@@ -1,0 +1,31 @@
+#!/bin/bash
+
+<% if @app_env_file -%>
+. <%= @app_env_file %>
+<% else %>
+. /etc/app-env.sh
+<% end %>
+
+CNFFILE=/etc/app-sns
+
+# check if SNS exists
+#  if not create it and save name
+#  add email to subscribers
+# send exists and alert message provided, send alert
+
+if [ ! -e $CNFFILE  -o "$1" = "create" ]; then
+  aws sns create-topic --name $SNS_NAME  > /tmp/sns-creation.out || exit 1
+  cat /tmp/sns-creation.out |   python -c 'import sys, json; print json.load(sys.stdin)["TopicArn"]' > $CNFFILE
+  echo "A new SNS was created $(cat $CNFFILE), adding default email as destination: $SNS_DEFAULT_MAIL "
+  aws sns subscribe --topic-arn "$(cat $CNFFILE)" --protocol email --notification-endpoint $SNS_DEFAULT_MAIL
+fi
+
+if [ -n "$1" ];  then
+  if ! aws sns publish --topic-arn $(cat $CNFFILE)  --message "$*" ; then
+    echo "Could not send message '$*' to SNS: $(cat $CNFFILE)" >&2
+    exit 1
+  fi
+else
+  echo "no message provided, nothing to do!"
+fi
+

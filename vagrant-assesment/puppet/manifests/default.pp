@@ -26,7 +26,7 @@ vcsrepo { '/opt/email-processor':
   require    => Package['git'],
   submodules => true,
   revision   => 'pedro',
-#   identity => '/home/innovativetravel/github-deploy.pem,
+#   identity => '/etc/innovativetravel/github-deploy.pem,
 }
 
 exec{'emailprocessor-install':
@@ -43,22 +43,25 @@ class { 'supervisord':
 }
 
 supervisord::program { 'emailprocessor':
-  command         => '/usr/local/bin/emailprocessor bing_to_s3',
-  priority        => '100',
-  redirect_stderr => true,
-  stopsignal      => 'INT',
-  directory       => $app_directory,
-  require         => Exec['emailprocessor-install'],
-  user            => $app_runas,
+  command                 => '/usr/local/bin/emailprocessor bing_to_s3',
+  priority                => '100',
+  redirect_stderr         => true,
+  stopsignal              => 'INT',
+  directory               => $app_directory,
+  require                 => Exec['emailprocessor-install'],
+  user                    => $app_runas,
+  stdout_logfile_maxbytes => '20MB',
 }
 
 supervisord::supervisorctl { 'restart_emailprocessor':
- command     => 'restart',
- process     => 'emailprocessor',
- refreshonly => true,
- subscribe   => Exec['emailprocessor-install'],
+  command     => 'restart',
+  process     => 'emailprocessor',
+  refreshonly => true,
+  subscribe   => Exec['emailprocessor-install'],
 }
 
+
+# Auxiliary programs, should be in state stopped.
 supervisord::program { 'emailprocessor-save_attachments':
   command         => '/usr/local/bin/emailprocessor save_attachments',
   ensure_process  => 'stopped',
@@ -71,7 +74,6 @@ supervisord::program { 'emailprocessor-save_attachments':
   user            => $app_runas,
 }
 
-
 supervisord::program { 'emailprocessor-email_summary':
   command         => '/usr/local/bin/emailprocessor email_summary',
   ensure_process  => 'stopped',
@@ -82,4 +84,23 @@ supervisord::program { 'emailprocessor-email_summary':
   autorestart     => false,
   require         => Exec['emailprocessor-install'],
   user            => $app_runas,
+}
+
+# SNS related items
+exec{'install_awscli':
+  command => '/usr/bin/pip3 install awscli',
+  require => Package['python3-pip'],
+  creates => '/usr/local/bin/aws',
+}
+
+file { '/usr/local/bin/alert_sns.sh':
+  content => template('it_emailprocessor/alert_sns.sh.erb'),
+  mode    => '0755',
+}
+
+exec {'first_run_alert_sns':
+  command   => '/usr/local/bin/alert_sns.sh',
+  creates   => '/etc/app-sns',
+  logoutput => true,
+  require   =>  [ File['/usr/local/bin/alert_sns.sh'], Exec['install_awscli']]
 }
