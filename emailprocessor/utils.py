@@ -5,7 +5,7 @@ import string
 
 
 def _print(msg):
-    print("==> {}".format(msg),flush=True)
+    print("{} ==> {}".format(datetime.datetime.utcnow(),msg),flush=True)
 
 
 def filename_from_string(text):
