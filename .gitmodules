@@ -1,3 +1,9 @@
 [submodule "docs/source/_themes"]
 	path = docs/source/_themes
 	url = https://github.com/mitsuhiko/flask-sphinx-themes
+[submodule "vagrant-assesment/puppet/modules/vcsrepo"]
+	path = vagrant-assesment/puppet/modules/vcsrepo
+	url = https://github.com/puppetlabs/puppetlabs-vcsrepo.git
+[submodule "vagrant-assesment/puppet/modules/stdlib"]
+	path = vagrant-assesment/puppet/modules/stdlib
+	url = https://github.com/puppetlabs/puppetlabs-stdlib.git
