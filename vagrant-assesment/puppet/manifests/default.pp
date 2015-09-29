@@ -65,6 +65,7 @@ supervisord::supervisorctl { 'restart_emailprocessor':
 # Auxiliary programs, should be in state stopped.
 supervisord::program { 'emailprocessor-save_attachments':
   command         => '/usr/local/bin/emailprocessor save_attachments',
+  autostart       => false,
   ensure_process  => 'stopped',
   priority        => '999',
   redirect_stderr => true,
@@ -77,6 +78,7 @@ supervisord::program { 'emailprocessor-save_attachments':
 
 supervisord::program { 'emailprocessor-email_summary':
   command         => '/usr/local/bin/emailprocessor email_summary',
+  autostart       => false,
   ensure_process  => 'stopped',
   priority        => '998',
   redirect_stderr => true,
