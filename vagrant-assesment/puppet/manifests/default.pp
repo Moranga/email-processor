@@ -96,9 +96,15 @@ exec{'install_awscli':
   creates => '/usr/local/bin/aws',
 }
 
-file { '/usr/local/bin/alert_sns.sh':
-  content => template('it_emailprocessor/alert_sns.sh.erb'),
-  mode    => '0755',
+file { 
+  '/usr/local/bin/alert_sns.sh':
+    content => template('it_emailprocessor/alert_sns.sh.erb'),
+    mode    => '0755',
+    require => Exec['install_awscli'];
+  '/usr/local/bin/set_eip.sh':
+    content => template('it_emailprocessor/templates/set_eip.sh.erb'),
+    mode    => '0755',
+    require => Exec['install_awscli'];
 }
 
 exec {'first_run_alert_sns':

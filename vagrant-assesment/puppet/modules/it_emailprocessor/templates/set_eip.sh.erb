@@ -1,0 +1,16 @@
+#!/bin/bash
+
+<% if @app_env_file -%>
+. <%= @app_env_file %>
+<% else %>
+. /etc/app-env.sh
+<% end %>
+
+INSTANCE_ID=$(facter ec2_instance_id)
+
+[ -z "${INSTANCE_ID}" ] && echo "Ops, we are not inside amazon" && exit
+[ -z "${AWS_EIP}" ] && echo "EIP variable not defined" && exit
+
+
+aws ec2 associate-address --output text --region ${AWS_DEFAULT_REGION} --instance-id ${INSTANCE_ID} --public-ip ${AWS_EIP} 
+exit $?
