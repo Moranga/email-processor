@@ -31,6 +31,7 @@ class BingReportsToS3(ProcessAttachments):
     def get_s3key(self, payload):
         """Produces a meaningful S3 key based on the report properties:
         reporting period, reporting account, etc"""
+        _print("We received a payload, preparing to process zip file")
         with ZipFile(io.BytesIO(payload)) as myzip:
             # Should contain just one file: the report
             file = myzip.filelist[0]
@@ -40,8 +41,10 @@ class BingReportsToS3(ProcessAttachments):
             with myzip.open(file.filename, 'r') as myfile:
                 hdr = self._process_header(myfile)
 
+        _print("zip file processed")
         unknown_account = "unknown-{}".format(uuid.uuid4())
         account = filename_from_string(hdr.account or unknown_account)
+        _print("used account: {}".format(account))
         return os.path.join(self.prefix, hdr.type.lower(),
                             str(hdr.first_day.year),
                             str(hdr.first_day.month), str(hdr.first_day.day),
@@ -72,6 +75,7 @@ class BingReportsToS3(ProcessAttachments):
 
     def _process_header(self, myfile):
         # Look for the "Report Time" row until we find a blank line
+        _print("processing file")
         first_day, last_day, aggr, filterstr, nbrows, account, reptype, \
             repversion = [None]*8
         for row in myfile:
@@ -97,12 +101,15 @@ class BingReportsToS3(ProcessAttachments):
     @property
     def client(self):
         """Caches the boto3 S3 client"""
+        _print("Preparing to connect to S3")
         if self.__client is None:
             self.__client = boto3.client('s3')
+        _print("connected to S3")
         return self.__client
 
     def process_attachment(self, payload, filename):
         s3key = self.get_s3key(payload)
+        _print("connecting to S3 with s3key: {}".format(s3key))
         self.client.put_object(ACL='private', Bucket=self.bucket, Body=payload,
                                Key=s3key)
         _print("Produced {}".format(s3key))
