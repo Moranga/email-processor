@@ -13,3 +13,6 @@
 [submodule "vagrant-assesment/puppet/modules/supervisord"]
 	path = vagrant-assesment/puppet/modules/supervisord
 	url = https://github.com/ajcrowe/puppet-supervisord.git
+[submodule "vagrant-assesment/puppet/modules/datadog_agent"]
+	path = vagrant-assesment/puppet/modules/datadog_agent
+	url = https://github.com/DataDog/puppet-datadog-agent.git

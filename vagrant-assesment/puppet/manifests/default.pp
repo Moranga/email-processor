@@ -40,6 +40,7 @@ exec{'emailprocessor-install':
 class { 'supervisord':
   install_pip   => true,
   init_template => 'it_emailprocessor/Debian-defaults.erb',
+  unix_socket_mode  => '0770',
 }
 
 supervisord::program { 'emailprocessor':
@@ -103,4 +104,18 @@ exec {'first_run_alert_sns':
   creates   => '/etc/app-sns',
   logoutput => true,
   require   =>  [ File['/usr/local/bin/alert_sns.sh'], Exec['install_awscli']]
+}
+
+# Monitoring
+class { "datadog_agent":
+  api_key => "bcbb46c5cd3068f5bc62aab08687170f"
+}
+
+file { 
+  '/etc/dd-agent/conf.d/supervisord.yaml':
+    content => template('it_emailprocessor/dd_supervisor.yaml.erb'),
+    notify  => Service[$::datadog_agent::params::service_name];
+  '/etc/dd-agent/conf.d/process.yaml':
+    content => template('it_emailprocessor/dd_processes.yaml.erb'),
+    notify  => Service[$::datadog_agent::params::service_name];
 }
