@@ -7,6 +7,7 @@
 <% end %>
 
 CNFFILE=/etc/app-sns
+THRESHOLD=50
 
 # check if SNS exists
 #  if not create it and save name
@@ -18,6 +19,16 @@ if [ ! -e $CNFFILE  -o "$1" = "create" ]; then
   cat /tmp/sns-creation.out |   python -c 'import sys, json; print json.load(sys.stdin)["TopicArn"]' > $CNFFILE
   echo "A new SNS was created $(cat $CNFFILE), adding default email as destination: $SNS_DEFAULT_MAIL "
   aws sns subscribe --topic-arn "$(cat $CNFFILE)" --protocol email --notification-endpoint $SNS_DEFAULT_MAIL
+fi
+
+if [ "$1" = "check" ];then
+  N=$( aws cloudwatch get-metric-statistics  --namespace EmailProcessor --metric-name processed --statistics Sum --period 86400 --start-time $(date +"%Y-%m-%dT%H:%M:%S%:::z" -d 'yesterday' )  --end-time $(date +"%Y-%m-%dT%H:%M:%S%:::z")  | \
+      python -c 'import sys, json; print json.load(sys.stdin)["Datapoints"][0]["Sum"] ' )
+  echo $N  
+  if expr $N \< $THRESHOLD; then
+     aws sns publish --topic-arn $(cat $CNFFILE)  --message "Number of messages last 24hours is bellow $THRESHOLD; current count $N"
+  fi
+  exit
 fi
 
 if [ -n "$1" ];  then
