@@ -3,6 +3,7 @@
 
 import string
 import datetime
+import boto3
 
 
 def _print(msg):
@@ -14,3 +15,9 @@ def filename_from_string(text):
     text = text.lower()
     valid_chars = "-_." + string.ascii_letters + string.digits
     return ''.join(c for c in text if c in valid_chars)
+
+def send_metric():
+    """Add metric to cloudwatch"""
+    client = boto3.client('cloudwatch')
+    client.put_metric_data( Namespace='EmailProcessor', MetricData=[ { 'MetricName': 'processed', 'Value': 1, 'Unit': 'Count' }, ])
+

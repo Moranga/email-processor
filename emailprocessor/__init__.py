@@ -4,7 +4,7 @@
 from emailprocessor import metadata
 from smtpd import SMTPServer
 import contextlib
-from emailprocessor.utils import _print
+from emailprocessor.utils import _print, send_metric
 import asyncore
 import abc
 from collections import defaultdict
@@ -47,6 +47,7 @@ class EmailServer(SMTPServer, contextlib.ContextDecorator,
             for proc in self.processors[username].values():
                 _print("Running {} processor ...".format(proc.name))
                 proc.process(peer, mailfrom, rcpttos, data, **params)
+            send_metric()
             _print("Done!")
         else:
             _print("No processors registered for {}".format(username))
