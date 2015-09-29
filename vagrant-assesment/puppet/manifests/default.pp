@@ -26,7 +26,7 @@ vcsrepo { '/opt/email-processor':
   require    => Package['git'],
   submodules => true,
   revision   => 'pedro',
-#   identity => '/etc/innovativetravel/github-deploy.pem,
+#   identity => '/etc/app-deploy.pem,
 }
 
 exec{'emailprocessor-install':
