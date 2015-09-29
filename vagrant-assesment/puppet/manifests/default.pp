@@ -30,7 +30,7 @@ vcsrepo { '/opt/email-processor':
 }
 
 exec{'emailprocessor-install':
-  command     => '/usr/bin/pip3 install .',
+  command     => '/usr/bin/pip3 install --upgrade .',
   cwd         => '/opt/email-processor',
   refreshonly => true,
   subscribe   => Vcsrepo['/opt/email-processor'],
