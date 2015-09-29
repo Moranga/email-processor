@@ -10,6 +10,6 @@
 [submodule "vagrant-assesment/puppet/modules/concat"]
 	path = vagrant-assesment/puppet/modules/concat
 	url = https://github.com/puppetlabs/puppetlabs-concat.git
-[submodule "vagrant-assesment/vagrant-assesment/puppet/modules/supervisord"]
-	path = vagrant-assesment/vagrant-assesment/puppet/modules/supervisord
+[submodule "vagrant-assesment/puppet/modules/supervisord"]
+	path = vagrant-assesment/puppet/modules/supervisord
 	url = https://github.com/ajcrowe/puppet-supervisord.git
