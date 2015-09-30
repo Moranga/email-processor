@@ -31,3 +31,19 @@ The following environment variables can be passed to vagrant:
 
 
 
+Just re-deploy the app
+====
+
+You can redeploy the app, by running:
+
+        cd /opt/email-processor/vagrant-assesment/
+        bash apply_puppet.sh
+
+
+Missing
+====
+
+- Better monitoring (datadog not satisfactory)
+- Better SNS integration
+- Plug of EIP not activated
+
