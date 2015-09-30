@@ -127,3 +127,10 @@ file {
     content => template('it_emailprocessor/dd_processes.yaml.erb'),
     notify  => Service[$::datadog_agent::params::service_name];
 }
+
+cron { 'check_number_emails':
+  command => '/bin/bash /usr/local/bin/alert_sns.sh check 2>&1 /dev/null',
+  hour    => 6,
+  minute  => 0,
+}
+
