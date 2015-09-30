@@ -7,7 +7,7 @@ import boto3
 
 
 def _print(msg):
-    print("{} ==> {}".format(datetime.datetime.utcnow(),msg),flush=True)
+    print("{} ==> {}".format(datetime.datetime.utcnow(), msg), flush=True)
 
 
 def filename_from_string(text):
@@ -16,8 +16,9 @@ def filename_from_string(text):
     valid_chars = "-_." + string.ascii_letters + string.digits
     return ''.join(c for c in text if c in valid_chars)
 
+
 def send_metric():
     """Add metric to cloudwatch"""
     client = boto3.client('cloudwatch')
-    client.put_metric_data( Namespace='EmailProcessor', MetricData=[ { 'MetricName': 'processed', 'Value': 1, 'Unit': 'Count' }, ])
-
+    client.put_metric_data(Namespace='EmailProcessor', 
+        MetricData=[{'MetricName': 'processed', 'Value': 1, 'Unit': 'Count'},])
