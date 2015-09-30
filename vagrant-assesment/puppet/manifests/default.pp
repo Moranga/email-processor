@@ -22,7 +22,7 @@ vcsrepo { '/opt/email-processor':
   ensure     => latest,
   provider   => git,
 #  source     => 'https://github.com/InnovativeTravel/email-processor',
-  source     => 'https://bitbucket.org/pmoranga/innovativetravel-email-processor.git',
+  source     => 'https://github.com/Moranga/email-processor.git',
   require    => Package['git'],
   submodules => true,
   revision   => 'pedro',
