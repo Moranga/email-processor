@@ -46,4 +46,5 @@ Missing
 - Better monitoring (datadog not satisfactory)
 - Better SNS integration
 - Plug of EIP not activated
+- email address where the emails should be directed: I made no DNS changes and MX related, so I don't have how to provide it. you will need to change the MX records to the ip provided at the end of vagrant run to compute the email address.
 
