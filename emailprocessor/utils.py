@@ -20,5 +20,7 @@ def filename_from_string(text):
 def send_metric():
     """Add metric to cloudwatch"""
     client = boto3.client('cloudwatch')
-    client.put_metric_data(Namespace='EmailProcessor', 
-        MetricData=[{'MetricName': 'processed', 'Value': 1, 'Unit': 'Count'},])
+    client.put_metric_data(Namespace='EmailProcessor', MetricData=[
+                           {'MetricName': 'processed',
+                            'Value': 1,
+                            'Unit': 'Count'}])
